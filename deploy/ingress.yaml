@@ -1,0 +1,19 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-world
+  namespace: default
+  labels:
+    app: hello-world
+    tier: frontend
+    version: "${VERSION}"
+spec:
+  rules:
+  - host: "${HOSTNAME}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: hello-world
+          servicePort: 80

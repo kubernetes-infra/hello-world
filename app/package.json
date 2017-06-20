@@ -1,0 +1,12 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "Hello World Application",
+  "main": "index.js",
+  "repository": "https://github.com/kubernetes-infra/hello-world.git",
+  "author": "Hans Flaatten <hans.flaatten@evry.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}

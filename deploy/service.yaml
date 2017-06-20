@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: hello-world
+  namespace: default
+  labels:
+    app: hello-world
+    tier: frontend
+    version: "${VERSION}"
+spec:
+  ports:
+    - port: 80
+      targetPort: 3000
+  selector:
+    app: hello-world
+    tier: frontend
