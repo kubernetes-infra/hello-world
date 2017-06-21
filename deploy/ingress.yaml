@@ -8,6 +8,8 @@ metadata:
     app: hello-world
     tier: frontend
     version: "${VERSION}"
+  annotations:
+    traefik.frontend.rule.type: pathprefix
 spec:
   rules:
   - host: "${HOSTNAME}"
