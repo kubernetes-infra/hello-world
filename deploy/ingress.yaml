@@ -10,6 +10,7 @@ metadata:
     version: "${VERSION}"
   annotations:
     traefik.frontend.rule.type: pathprefix
+    traefik.frontend.entryPoints: https
 spec:
   rules:
   - host: "${HOSTNAME}"
