@@ -26,12 +26,36 @@ node('jenkins-docker-2') {
         checkout scm
       }
 
-      stage('Build') {
+      stage('Install') {
+        docker.image('node:8-alpine').inside() {
+          sh 'yarn install --development'
+        }
+      }
+
+      stage('Lint') {
+        docker.image('node-8-alpine').inside() {
+          sh 'yarn run lint'
+        }
+      }
+
+      stage('Test') {
+        docker.image('node-8-alpine').inside() {
+          sh 'yarn run test'
+        }
+      }
+
+      stage('Prune') {
+        docker.image('node-8-alpine').inside() {
+          sh 'yarn install --production'
+        }
+      }
+
+      stage('Docker Build') {
         conf.DOCKER_IMAGE = "${conf.REGISTRY}/${conf.NAME}:${conf.TAG}"
         image = docker.build(conf.DOCKER_IMAGE)
       }
 
-      stage('Push') {
+      stage('Docker Push') {
         docker.withRegistry("https://${conf.REGISTRY}", conf.REGISTRY) {
           image.push()
         }

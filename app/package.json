@@ -8,5 +8,16 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.3"
+  },
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "eslint": "^4.0.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.5.0",
+    "supertest": "^3.0.0"
+  },
+  "scripts": {
+    "test": "ava",
+    "lint": "eslint *.js"
   }
 }
