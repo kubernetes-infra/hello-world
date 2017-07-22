@@ -26,26 +26,31 @@ node('jenkins-docker-3') {
         checkout scm
       }
 
+      def nodeImage = 'node:8-alpine'
+      def nodeArgs = [
+        '-v /home/jenkins/.cache/yarn:/home/node/.cache/yarn'
+      ].join(' ')
+
       stage('Install') {
-        docker.image('node:8-alpine').inside() {
+        docker.image(nodeImage).inside(nodeArgs) {
           sh 'cd app && yarn install --development'
         }
       }
 
       stage('Lint') {
-        docker.image('node:8-alpine').inside() {
+        docker.image(nodeImage).inside(nodeArgs) {
           sh 'cd app && yarn run lint'
         }
       }
 
       stage('Test') {
-        docker.image('node:8-alpine').inside() {
+        docker.image(nodeImage).inside(nodeArgs) {
           sh 'cd app && yarn run test'
         }
       }
 
       stage('Prune') {
-        docker.image('node:8-alpine').inside() {
+        docker.image(nodeImage).inside(nodeArgs) {
           sh 'cd app && yarn install --production'
         }
       }
