@@ -33,19 +33,19 @@ node('jenkins-docker-3') {
       }
 
       stage('Lint') {
-        docker.image('node-8-alpine').inside() {
+        docker.image('node:8-alpine').inside() {
           sh 'yarn run lint'
         }
       }
 
       stage('Test') {
-        docker.image('node-8-alpine').inside() {
+        docker.image('node:8-alpine').inside() {
           sh 'yarn run test'
         }
       }
 
       stage('Prune') {
-        docker.image('node-8-alpine').inside() {
+        docker.image('node:8-alpine').inside() {
           sh 'yarn install --production'
         }
       }
