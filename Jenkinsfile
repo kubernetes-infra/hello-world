@@ -37,17 +37,22 @@ node('jenkins-docker-3') {
         }
       }
 
-      stage('Lint') {
-        docker.image(nodeImage).inside(nodeArgs) {
-          sh 'cd app && yarn run lint'
+      parallel (
+        "lint" : {
+          stage('Lint') {
+            docker.image(nodeImage).inside(nodeArgs) {
+              sh 'cd app && yarn run lint'
+            }
+          }
+        },
+        "test" : {
+          stage('Test') {
+            docker.image(nodeImage).inside(nodeArgs) {
+              sh 'cd app && yarn run test'
+            }
+          }
         }
-      }
-
-      stage('Test') {
-        docker.image(nodeImage).inside(nodeArgs) {
-          sh 'cd app && yarn run test'
-        }
-      }
+      )
 
       stage('Prune') {
         docker.image(nodeImage).inside(nodeArgs) {
