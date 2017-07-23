@@ -38,6 +38,14 @@ node('jenkins-docker-3') {
       }
 
       parallel (
+        "nsp": {
+          stage('NSP') {
+            docker.image(nodeImage).inside(nodeArgs) {
+              sh 'cd app && yarn run nsp check'
+            }
+          }
+        },
+
         "lint" : {
           stage('Lint') {
             docker.image(nodeImage).inside(nodeArgs) {
@@ -45,6 +53,7 @@ node('jenkins-docker-3') {
             }
           }
         },
+
         "test" : {
           stage('Test') {
             docker.image(nodeImage).inside(nodeArgs) {
