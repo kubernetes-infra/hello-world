@@ -7,6 +7,16 @@ properties([
       defaultValue: 'kubernetes.demo',
       description: 'The Kubernetes Cluster you want to deploy to',
     ),
+    string(
+      name: 'DOCKER_REGISTRY',
+      defaultValue: 'k8sinfra.azurecr.io',
+      description: 'The Docker Registry you want to push the Docker Image to',
+    ),
+    string(
+      name: 'APP_HOSTNAME',
+      defaultValue: 'hello-world.evry.fun',
+      description: 'Resolvable DNS name for the application',
+    ),
   ])
 ])
 
@@ -16,9 +26,8 @@ node('jenkins-docker-3') {
       def conf = [
         NAME: 'kubernetes-infra/hello-world',
         TAG: "${env.BRANCH_NAME}-${env.BUILD_NUMBER}",
-        REGISTRY: 'k8sinfra.azurecr.io',
         VERSION: 'v1.0.0',
-        HOSTNAME: 'hello-world.evry.fun',
+        HOSTNAME: env.APP_HOSTNAME,
         DEPLOY: 'true',
       ]
 
@@ -70,12 +79,12 @@ node('jenkins-docker-3') {
       }
 
       stage('Docker Build') {
-        conf.DOCKER_IMAGE = "${conf.REGISTRY}/${conf.NAME}:${conf.TAG}"
+        conf.DOCKER_IMAGE = "${DOCKER_REGISTRY}/${conf.NAME}:${conf.TAG}"
         image = docker.build(conf.DOCKER_IMAGE)
       }
 
       stage('Docker Push') {
-        docker.withRegistry("https://${conf.REGISTRY}", conf.REGISTRY) {
+        docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_REGISTRY) {
           image.push()
         }
       }
