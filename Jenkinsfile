@@ -106,14 +106,14 @@ node('jenkins-docker-3') {
       // prevent building over other images. See the Dockerfile for how the
       // Docker Image is otherwise constructed.
       stage('Docker Build') {
-        conf.DOCKER_IMAGE = "${DOCKER_REGISTRY}/${conf.NAME}:${conf.TAG}"
+        conf.DOCKER_IMAGE = "${env.DOCKER_REGISTRY}/${conf.NAME}:${conf.TAG}"
         image = docker.build(conf.DOCKER_IMAGE)
       }
 
       // Push the newly built Docker Image to a Docker Registry of your choosing
       // in order to reach it later in the deployment stage.
       stage('Docker Push') {
-        docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_REGISTRY) {
+        docker.withRegistry("https://${env.DOCKER_REGISTRY}", env.DOCKER_REGISTRY) {
           image.push()
         }
       }
