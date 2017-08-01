@@ -5,10 +5,11 @@ services:
     image: node:8-alpine
     working_dir: /usr/src/app
     network_mode: bridge
+    ports:
+      - "8080:8080"
     volumes:
       - "./app:/usr/src/app"
     environment:
       - NODE_ENV=development
-      - NPM_CONFIG_LOGLEVEL=silent
-      - NPM_CONFIG_PROGRESS=false
-      - NPM_CONFIG_SPIN=false
+      - MONGO_DB=test
+    command: yarn run start

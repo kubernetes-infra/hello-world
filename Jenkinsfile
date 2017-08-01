@@ -58,6 +58,15 @@ node('jenkins-docker-3') {
         }
       }
 
+      // Built all frontend assets required for running this application in
+      // production. Here we are using the Grunt task runner, see Gruntfile for
+      // how this is otherwise configured.
+      stage('Build') {
+        docker.image(nodeImage).inside(nodeArgs) {
+          sh 'cd app && yarn run grunt'
+        }
+      }
+
       // Speed up builds by running multiple tasks in parallel. Keep in mind
       // that these tasks can not depend on each other and should not modify the
       // sharedstate of the workspace.
