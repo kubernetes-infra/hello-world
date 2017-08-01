@@ -115,7 +115,9 @@ node('jenkins-docker-3') {
       // prevent building over other images. See the Dockerfile for how the
       // Docker Image is otherwise constructed.
       stage('Docker Build') {
-        conf.DOCKER_IMAGE = "${env.DOCKER_REGISTRY}/${conf.NAME}:${conf.TAG}"
+        conf.DOCKER_REGISTRY = env.DOCKER_REGISTRY
+        conf.DOCKER_IMAGE = "${conf.DOCKER_REGISTRY}/${conf.NAME}:${conf.TAG}"
+
         image = docker.build(conf.DOCKER_IMAGE)
       }
 

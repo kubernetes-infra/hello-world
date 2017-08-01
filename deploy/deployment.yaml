@@ -49,4 +49,4 @@ spec:
         - name: NODE_ENV
           value: production
       imagePullSecrets:
-      - name: "${REGISTRY}"
+      - name: "${DOCKER_REGISTRY}"
