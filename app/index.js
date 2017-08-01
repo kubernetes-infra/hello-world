@@ -1,11 +1,10 @@
 /* eslint no-console: 0, no-unused-vars: 0 */
-'use strict';
 
 const express = require('express');
-const statics = express.static;
 const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
 
+const statics = express.static;
 const app = express();
 
 app.set('x-powered-by', false);
@@ -15,7 +14,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/static', statics(`${__dirname}/static`));
-//app.use('/themes', statics(`${__dirname}/node_modules/semantic-ui-less/themes`));
 
 module.exports.nunjucks = nunjucks.configure('views', {
   autoescape: true,

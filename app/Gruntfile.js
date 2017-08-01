@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = (grunt) => {
   // Project configuration.
   grunt.initConfig({
@@ -48,12 +46,6 @@ module.exports = (grunt) => {
         ],
         dest: 'static/js/bundle.js',
       },
-      //css: {
-      //  src: [
-      //    'node_modules/trumbowyg/dist/ui/trumbowyg.min.css',
-      //  ],
-      //  dest: 'static/css/bundle.css',
-      //},
     },
 
   });
