@@ -20,6 +20,10 @@ properties([
   ])
 ])
 
+@Library('utils')
+
+import no.evry.Docker
+
 node('jenkins-docker-3') {
   // Make a clean workspace for the new build to prevent multiple concurrent
   // builds from polluting the others working directory.
@@ -29,9 +33,11 @@ node('jenkins-docker-3') {
     // process them before exiting.
     try {
 
+      def dconf = new Docker(this)
+
       def conf = [
-        NAME: 'kubernetes-infra/hello-world',
-        TAG: "${env.BRANCH_NAME}-${env.BUILD_NUMBER}",
+        NAME: "kubernetes-infra/${dconf.imageName()}",
+        TAG: dconf.buildTag(),
         VERSION: 'v1.0.0',
         HOSTNAME: env.APP_HOSTNAME,
         DEPLOY: 'true',
