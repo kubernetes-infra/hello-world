@@ -1,28 +1,9 @@
 #!groovy
 
-properties([
-  parameters([
-    string(
-      name: 'K8S_CLUSTER',
-      defaultValue: 'kubernetes.demo',
-      description: 'The Kubernetes Cluster you want to deploy to',
-    ),
-    string(
-      name: 'DOCKER_REGISTRY',
-      defaultValue: 'k8sinfra.azurecr.io',
-      description: 'The Docker Registry you want to push the Docker Image to',
-    ),
-    string(
-      name: 'APP_HOSTNAME',
-      defaultValue: 'hello-world.evry.fun',
-      description: 'Resolvable DNS name for the application',
-    ),
-  ])
-])
-
 @Library('utils')
 
 import no.evry.Docker
+import no.evry.Config
 
 node('jenkins-docker-3') {
   // Make a clean workspace for the new build to prevent multiple concurrent
@@ -33,27 +14,31 @@ node('jenkins-docker-3') {
     // process them before exiting.
     try {
 
-      def dconf = new Docker(this)
+      // Jenkins pipelines are "dumb" in that regards that it does not do
+      // anything unless you explicitly tells it so. Here we checkout the
+      // repository in order to the source code into the workspace.
+      stage('Checkout')
+        {
+          checkout scm
+        }
 
-      def conf = [
-        NAME: "kubernetes-infra/${dconf.imageName()}",
-        TAG: dconf.buildTag(),
-        VERSION: 'v1.0.0',
-        HOSTNAME: env.APP_HOSTNAME,
-        DEPLOY: 'true',
+      // Configure which branches should get the following configurations. The
+      // configurations are stored in the /build directory and controles the
+      // Jenkins build and Kubernetes deployment.
+      def envPatterns = [
+        [env: 'dev',  regex: /^develop$/],
+        [env: 'test', regex: /^release\/v[0-9]+\.[0-9]+\.[0-9]+$/],
+        [env: 'prod', regex: /^master$/],
       ]
+
+      config = new Config(this).branchProperties(envPatterns)
 
       def nodeImage = 'node:8-alpine'
       def nodeArgs = [
         '-v /home/jenkins/.cache/yarn:/home/node/.cache/yarn'
       ].join(' ')
 
-      // Jenkins pipelines are "dumb" in that regards that it does not do
-      // anything unless you explicitly tells it so. Here we checkout the
-      // repository in order to the source code into the workspace.
-      stage('Checkout') {
-        checkout scm
-      }
+
 
       // Install all packge dependencies specificed in package.json. We also
       // need to install development dependencies in order to build and test the
@@ -121,26 +106,30 @@ node('jenkins-docker-3') {
       // prevent building over other images. See the Dockerfile for how the
       // Docker Image is otherwise constructed.
       stage('Docker Build') {
-        conf.DOCKER_REGISTRY = env.DOCKER_REGISTRY
-        conf.DOCKER_IMAGE = "${conf.DOCKER_REGISTRY}/${conf.NAME}:${conf.TAG}"
+        Docker doc = new Docker(this, [nameOnly: true])
+        
+        config.DOCKER_TAG = doc.buildTag()
+        config.DOCKER_IMAGE = doc.image(config.DOCKER_REGISTRY)
 
-        image = docker.build(conf.DOCKER_IMAGE)
+        image = docker.build(doc.image())
       }
 
       // Push the newly built Docker Image to a Docker Registry of your choosing
       // in order to reach it later in the deployment stage.
-      stage('Docker Push') {
-        docker.withRegistry("https://${env.DOCKER_REGISTRY}", env.DOCKER_REGISTRY) {
-          image.push()
+      if (config.JENKINS_DEPLOY == 'true') {
+        stage('Docker Push') {
+          docker.withRegistry("https://${env.DOCKER_REGISTRY}", env.DOCKER_REGISTRY) {
+            image.push(config.DOCKER_TAG)
+          }
         }
       }
 
       // Deploy the application to Kubernetes. See the Jenkins Utility repo for
       // more information about the kubernetesDeploy function and it's configs.
-      stage("Deploy") {
-        def Boolean dryrun = conf.DEPLOY != 'true'
+      stage("Deploy ${config.K8S_NAMESPACE}@${config.K8S_CLUSTER}") {
+        boolean  dryrun = config.JENKINS_DEPLOY != 'true'
 
-        kubernetesDeploy(conf, [k8sCluster: env.K8S_CLUSTER, dryrun: dryrun])
+        kubernetesDeploy(config, [k8sCluster: config.K8S_CLUSTER, dryrun: dryrun])
       }
 
     // Catch abort build interrupts and possible handle them differently. They

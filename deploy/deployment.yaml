@@ -1,12 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: hello-world
-  namespace: default
+  name: "${K8S_NAME}"
+  namespace: "${K8S_NAMESPACE}"
   labels:
-    app: hello-world
-    tier: frontend
-    version: "${VERSION}"
+    app: "${K8S_APP}"
+    component: "${K8S_NAME}"
+    tier: "${K8S_TIER}"
+    environment: "${APP_ENV}"
 spec:
   replicas: 2
   revisionHistoryLimit: 5
@@ -16,37 +17,38 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: hello-world
-      tier: frontend
+      app: "${K8S_APP}"
+      component: "${K8S_NAME}"
+      tier: "${K8S_TIER}"
+      environment: "${APP_ENV}"
   template:
     metadata:
       labels:
-        app: hello-world
-        tier: frontend
-        version: "${VERSION}"
+        app: "${K8S_APP}"
+        component: "${K8S_NAME}"
+        tier: "${K8S_TIER}"
+        environment: "${APP_ENV}"
     spec:
       containers:
-      - name: hello-world
+      - name: "${K8S_NAME}"
         image: "${DOCKER_IMAGE}"
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8080
+        - containerPort: ${K8S_PORT}
           protocol: TCP
           name: http
         livenessProbe:
           httpGet:
             path: /
-            port: 8080
-          initialDelaySeconds: 30
-          timeoutSeconds: 30
+            port: ${K8S_PORT}
+          initialDelaySeconds: 15
+          timeoutSeconds: 15
         readinessProbe:
           httpGet:
             path: /
-            port: 8080
+            port: ${K8S_PORT}
           initialDelaySeconds: 30
           timeoutSeconds: 30
-        env:
-        - name: NODE_ENV
-          value: production
       imagePullSecrets:
       - name: "${DOCKER_REGISTRY}"
+

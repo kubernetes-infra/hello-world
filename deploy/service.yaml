@@ -1,16 +1,20 @@
+---
 kind: Service
 apiVersion: v1
 metadata:
-  name: hello-world
-  namespace: default
+  name: "${K8S_NAME}"
+  namespace: "${K8S_NAMESPACE}"
   labels:
-    app: hello-world
-    tier: frontend
-    version: "${VERSION}"
+    app: "${K8S_APP}"
+    component: "${K8S_NAME}"
+    tier: "${K8S_TIER}"
+    environment: "${APP_ENV}"
 spec:
   ports:
-    - port: 80
-      targetPort: 8080
+  - port: 80
+    targetPort: ${K8S_PORT}
   selector:
-    app: hello-world
-    tier: frontend
+    app: "${K8S_APP}"
+    component: "${K8S_NAME}"
+    tier: "${K8S_TIER}"
+    environment: "${APP_ENV}"
