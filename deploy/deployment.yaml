@@ -49,6 +49,11 @@ spec:
             port: ${K8S_PORT}
           initialDelaySeconds: 30
           timeoutSeconds: 30
+        env:
+        - name: NODE_ENV
+          value: "${APP_ENV}"
+        - name: MONGO_URI
+          value: "${MONGO_URI}"
       imagePullSecrets:
       - name: "${DOCKER_REGISTRY}"
 

@@ -9,120 +9,37 @@
 
     <div class="four wide column">
       <div class="ui secondary vertical menu">
-        <a class="active item">News Feed</a>
-        <a class="item">Settings</a>
+        <a class="active item" href="/">News Feed</a>
+        <a class="item" href="/submit">Submit</a>
       </div>
     </div>
 
     <div class="twelve wide column">
       {% block content %}
-      <div class="ui feed">
-        <div class="event">
-          <div class="label">
-            <img src="/static/images/avatar/small/elliot.jpg">
+      {% for post in posts %}
+      <div class="ui card">
+        <div class="content">
+          <!-- <i class="right floated like icon"></i> -->
+          <!-- <i class="right floated star icon"></i> -->
+          <div class="header"><a href="{{ post.link }}">{{ post.title }}</a></div>
+          <div class="meta">
+            <span class="right floated time">2 days ago</span>
+            <span class="category">Technology</span>
           </div>
-          <div class="content">
-            <div class="summary">
-              <a class="user">
-                Elliot Fu
-              </a> added you as a friend
-              <div class="date">
-                1 Hour Ago
-              </div>
-            </div>
-            <div class="meta">
-              <a class="like">
-                <i class="like icon"></i> 4 Likes
-              </a>
-            </div>
-          </div>
+          <div class="description"><p></p></div>
         </div>
-        <div class="event">
-          <div class="label">
-            <img src="/static/images/avatar/small/helen.jpg">
-          </div>
-          <div class="content">
-            <div class="summary">
-              <a>Helen Troy</a> added <a>2 new illustrations</a>
-              <div class="date">
-                4 days ago
-              </div>
-            </div>
-            <div class="extra images">
-              <a><img src="/static/images/wireframe/image.png"></a>
-              <a><img src="/static/images/wireframe/image.png"></a>
-            </div>
-            <div class="meta">
-              <a class="like">
-                <i class="like icon"></i> 1 Like
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="event">
-          <div class="label">
-            <img src="/static/images/avatar/small/jenny.jpg">
-          </div>
-          <div class="content">
-            <div class="summary">
-              <a class="user">
-                Jenny Hess
-              </a> added you as a friend
-              <div class="date">
-                2 Days Ago
-              </div>
-            </div>
-            <div class="meta">
-              <a class="like">
-                <i class="like icon"></i> 8 Likes
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="event">
-          <div class="label">
-            <img src="/static/images/avatar/small/joe.jpg">
-          </div>
-          <div class="content">
-            <div class="summary">
-              <a>Joe Henderson</a> posted on his page
-              <div class="date">
-                3 days ago
-              </div>
-            </div>
-            <div class="extra text">
-              Ours is a life of constant reruns. We're always circling back to where we'd we started, then starting all over again. Even if we don't run extra laps that day, we surely will come back for more of the same another day soon.
-            </div>
-            <div class="meta">
-              <a class="like">
-                <i class="like icon"></i> 5 Likes
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="event">
-          <div class="label">
-            <img src="/static/images/avatar/small/justen.jpg">
-          </div>
-          <div class="content">
-            <div class="summary">
-              <a>Justen Kitsune</a> added <a>2 new photos</a> of you
-              <div class="date">
-                4 days ago
-              </div>
-            </div>
-            <div class="extra images">
-              <a><img src="/static/images/wireframe/image.png"></a>
-              <a><img src="/static/images/wireframe/image.png"></a>
-            </div>
-            <div class="meta">
-              <a class="like">
-                <i class="like icon"></i> 41 Likes
-              </a>
-            </div>
-          </div>
+        <div class="extra content">
+          <span class="left floated rating">
+            <div class="ui star rating" data-id="{{ post._id }}" data-rating="{{ [0,1,2,3,4] | random }}"></div>
+          </span>
+          <span class="right floated author">
+            <a>@{{ post.user }}</a>
+          </span>
         </div>
       </div>
+      {% else %}
+      Sorry, there are no posts yet!
+      {% endfor %}
       {% endblock %}
     </div>
   </div>
@@ -130,5 +47,11 @@
 {% endblock %}
 
 {% block footer %}
-<!--<script src="/static/js/api/profile.js"></script>-->
+<script>
+  $('.left.rating .rating').rating({
+    onRate: function(value) {
+      console.log($(this).data('id'), value);
+    }
+  });
+</script>
 {% endblock %}

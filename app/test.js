@@ -12,5 +12,5 @@ test('index', async (t) => {
   const res = await req.get('/');
 
   t.is(res.status, 200);
-  t.true(/Hello World/.test(res.text));
+  t.true(/Hello News/.test(res.text));
 });

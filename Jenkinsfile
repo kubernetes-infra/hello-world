@@ -29,13 +29,15 @@ node('jenkins-docker-3') {
         [env: 'dev',  regex: /^develop$/],
         [env: 'test', regex: /^release\/v[0-9]+\.[0-9]+\.[0-9]+$/],
         [env: 'prod', regex: /^master$/],
+        [env: 'prod', regex: /^feature\/submissions$/],
       ]
 
       config = new Config(this).branchProperties(envPatterns)
 
       def nodeImage = 'node:8-alpine'
       def nodeArgs = [
-        '-v /home/jenkins/.cache/yarn:/home/node/.cache/yarn'
+        '-v /home/jenkins/.cache/yarn:/home/node/.cache/yarn',
+        '-e NODE_ENV=development',
       ].join(' ')
 
       // Install all packge dependencies specificed in package.json. We also
@@ -84,7 +86,13 @@ node('jenkins-docker-3') {
         // optimise the tests in order to make them execute faster; no one likes
         // to wait for them tests to complete!
         "test" : {
-          docker.image(nodeImage).inside(nodeArgs) {
+          mongo = docker.image('mongo:3.4').run()
+
+          docker.image(nodeImage).inside([
+            nodeArgs,
+            "--link ${mongo.id}:mongo",
+            "-e MONGO_URI=mongodb://mongo:27017/test",
+          ].join(' ')) {
             sh 'cd app && yarn run test'
           }
         }
@@ -104,7 +112,7 @@ node('jenkins-docker-3') {
       // prevent building over other images. See the Dockerfile for how the
       // Docker Image is otherwise constructed.
       stage('Docker Build') {
-        Docker doc = new Docker(this, [nameOnly: true])
+        Docker doc = new Docker(this, [nameOnly: false])
 
         config.DOCKER_TAG = doc.buildTag()
         config.DOCKER_IMAGE = doc.image(config.DOCKER_REGISTRY)
@@ -143,6 +151,8 @@ node('jenkins-docker-3') {
     // resource disposer to pick up before we close the connection to the worker
     // node.
     } finally {
+      mongo.stop()
+
       step([$class: 'WsCleanup'])
       sleep 10
     }
