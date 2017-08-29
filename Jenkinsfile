@@ -118,7 +118,7 @@ node('jenkins-docker-3') {
       // in order to reach it later in the deployment stage.
       if (config.JENKINS_DEPLOY == 'true') {
         stage('Docker Push') {
-          docker.withRegistry("https://${env.DOCKER_REGISTRY}", env.DOCKER_REGISTRY) {
+          docker.withRegistry("https://${config.DOCKER_REGISTRY}", config.DOCKER_REGISTRY) {
             image.push(config.DOCKER_TAG)
           }
         }
