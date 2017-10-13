@@ -38,8 +38,6 @@ node('jenkins-docker-3') {
         '-v /home/jenkins/.cache/yarn:/home/node/.cache/yarn'
       ].join(' ')
 
-
-
       // Install all packge dependencies specificed in package.json. We also
       // need to install development dependencies in order to build and test the
       // application. We will remove these later in the "Prune" stage.
@@ -107,7 +105,7 @@ node('jenkins-docker-3') {
       // Docker Image is otherwise constructed.
       stage('Docker Build') {
         Docker doc = new Docker(this, [nameOnly: true])
-        
+
         config.DOCKER_TAG = doc.buildTag()
         config.DOCKER_IMAGE = doc.image(config.DOCKER_REGISTRY)
 
