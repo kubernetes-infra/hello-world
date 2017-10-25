@@ -38,10 +38,14 @@
           <input type="text" name="link" placeholder="Link" value="{{ req.body.link }}">
         </div>
         <div class="field">
-          <div class="ui checkbox">
-            <input type="checkbox" tabindex="0" class="hidden">
-            <label>I agree to the Terms and Conditions</label>
-          </div>
+          <label>Category</label>
+          <select class="ui fluid search dropdown" name="category">
+            <option value="">Category</option>
+            <option>Technology</option>
+            <option>Politics</option>
+            <option>Hiking</option>
+            <option>Insurance</option>
+          </select>
         </div>
         <button class="ui button green" type="submit">Submit</button>
       </form>
@@ -53,4 +57,7 @@
 
 {% block footer %}
 <!--<script src="/static/js/api/profile.js"></script>-->
+<script>
+$('.ui.dropdown').dropdown();
+</script>
 {% endblock %}

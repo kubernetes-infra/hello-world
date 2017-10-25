@@ -10,9 +10,8 @@ route.all('/submit', (req, res) => {
   console.log(req.method);
 
   if (req.method === 'POST') {
-    const { user, title, link } = req.body;
-    const category = 'Technology';
-    const post = new Post({ user, title, link });
+    const { user, title, link, category } = req.body;
+    const post = new Post({ user, title, link, category });
 
     post.save((err) => {
       if (err) {

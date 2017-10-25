@@ -5,6 +5,7 @@ const postSchema = new Schema({
   user: { type: String },
   title: { type: String },
   link: { type: String },
+  category: { type: String, default: 'Uncategorized' },
   submitted: { type: Date, default: Date.now },
 });
 
