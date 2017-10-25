@@ -2,7 +2,7 @@ const Router = require('express').Router;
 const { Post } = require('../models/post');
 const { submissionsCounter } = require('../lib/metrics');
 
-const route = new Router();
+const route = new Router()
 const env = process.env;
 
 route.all('/submit', (req, res) => {
