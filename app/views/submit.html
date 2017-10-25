@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Submit – {{ super() }}{% endblock %}
+
+{% block container %}
+{% block header %}{% endblock %}
+<div class="ui grid">
+  <div class="row">
+
+    <div class="four wide column">
+      <div class="ui secondary vertical menu">
+        <a class="item" href="/">News Feed</a>
+        <a class="active item" href="/submit">Submit</a>
+      </div>
+    </div>
+
+    <div class="twelve wide column">
+      {% block content %}
+
+      {% if err %}
+      <div class="ui negative message">
+        <div class="header">Error</div>
+        <p>{{ err.message }}</p>
+      </div>
+      {% endif %}
+
+      <form class="ui form" method="post">
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="user" placeholder="Username" value="{{ req.body.user }}">
+        </div>
+        <div class="field">
+          <label>Title</label>
+          <input type="text" name="title" placeholder="Title" value="{{ req.body.title }}">
+        </div>
+        <div class="field">
+          <label>Link</label>
+          <input type="text" name="link" placeholder="Link" value="{{ req.body.link }}">
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox" tabindex="0" class="hidden">
+            <label>I agree to the Terms and Conditions</label>
+          </div>
+        </div>
+        <button class="ui button green" type="submit">Submit</button>
+      </form>
+      {% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<!--<script src="/static/js/api/profile.js"></script>-->
+{% endblock %}

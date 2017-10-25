@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
+const db = require('./lib/db');
 
 const statics = express.static;
 const app = express();
@@ -30,7 +31,9 @@ app.use('/', require('./controllers/post.js'));
 
 if (!module.parent) {
   // eslint-disable-next-line no-console
-  app.listen(8080, () => console.log('Example app listening on port 8080!'));
+  db.connection.once('open', () => {
+    app.listen(8080, () => console.log('Example app listening on port 8080!'));
+  });
 }
 
 module.exports = app;

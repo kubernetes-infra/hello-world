@@ -8,13 +8,14 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "express": "^4.15.3",
+    "express": "^4.15.4",
+    "mongoose": "^4.11.7",
     "nunjucks": "^3.0.1"
   },
   "devDependencies": {
-    "ava": "^0.21.0",
-    "eslint": "^4.0.0",
-    "eslint-config-airbnb-base": "^11.3.1",
+    "ava": "^0.22.0",
+    "eslint": "^4.5.0",
+    "eslint-config-airbnb-base": "^11.3.2",
     "eslint-plugin-import": "^2.5.0",
     "eslint-watch": "^3.1.2",
     "grunt": "^1.0.1",
@@ -25,14 +26,14 @@
     "grunt-contrib-watch": "^1.0.0",
     "jquery": "^3.2.1",
     "nsp": "^2.7.0",
-    "semantic-ui-less": "^2.2.11",
+    "semantic-ui-less": "^2.2.12",
     "supertest": "^3.0.0",
     "supervisor": "^0.12.0"
   },
   "scripts": {
     "grunt": "grunt",
     "grunt:watch": "grunt watch",
-    "lint": "eslint *.js",
+    "lint": "eslint *.js controllers lib models",
     "start": "supervisor -w index.js,controllers -e js index.js",
     "test": "ava"
   }
