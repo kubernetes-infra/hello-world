@@ -33,6 +33,10 @@ app.get('/metrics', (req, res) => {
   res.end(register.metrics());
 });
 
+app.get('/crash', (req, res) => {
+  process.exit(1);
+});
+
 app.use('/', require('./controllers/post.js'));
 
 if (!module.parent) {
