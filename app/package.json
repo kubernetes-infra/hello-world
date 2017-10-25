@@ -10,7 +10,8 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.4",
     "mongoose": "^4.11.7",
-    "nunjucks": "^3.0.1"
+    "nunjucks": "^3.0.1",
+    "prom-client": "^10.2.0"
   },
   "devDependencies": {
     "ava": "^0.22.0",
@@ -34,7 +35,7 @@
     "grunt": "grunt",
     "grunt:watch": "grunt watch",
     "lint": "eslint *.js controllers lib models",
-    "start": "supervisor -w index.js,controllers -e js index.js",
+    "start": "supervisor -w index.js,lib,controllers -e js index.js",
     "test": "ava"
   }
 }

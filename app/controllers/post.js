@@ -1,5 +1,6 @@
 const Router = require('express').Router;
 const { Post } = require('../models/post');
+const { submissionsCounter } = require('../lib/metrics');
 
 const route = new Router();
 const env = process.env;
@@ -10,12 +11,15 @@ route.all('/submit', (req, res) => {
 
   if (req.method === 'POST') {
     const { user, title, link } = req.body;
+    const category = 'Technology';
     const post = new Post({ user, title, link });
 
     post.save((err) => {
       if (err) {
+        submissionsCounter.inc({ category, status: 'error' });
         res.render('submit.html', { env, req, err });
       } else {
+        submissionsCounter.inc({ category, status: 'success' });
         res.redirect('/');
       }
     });

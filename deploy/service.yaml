@@ -9,6 +9,11 @@ metadata:
     component: "${K8S_NAME}"
     tier: "${K8S_TIER}"
     environment: "${APP_ENV}"
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "$APP_PORT"
+    prometheus.io/scheme: http
+    prometheus.io/scrape: "true"
 spec:
   ports:
   - port: 80

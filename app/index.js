@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
 const db = require('./lib/db');
+const { register } = require('./lib/metrics');
 
 const statics = express.static;
 const app = express();
@@ -25,6 +26,11 @@ module.exports.nunjucks = nunjucks.configure('views', {
 app.get('/favicon.ico', (req, res) => {
   res.set('Content-Type', 'image/x-icon');
   res.end();
+});
+
+app.get('/metrics', (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(register.metrics());
 });
 
 app.use('/', require('./controllers/post.js'));
