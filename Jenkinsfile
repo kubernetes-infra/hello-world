@@ -80,7 +80,11 @@ node('jenkins-docker-3') {
             sh 'cd app && yarn run lint'
           }
         },
-
+         "audit" : {
+            docker.image(nodeImage).inside(nodeArgs) {
+                sh 'cd app && yarn audit'
+            }
+        },
         // Run the test suite for the application. In any normal project this is
         // the part that takes the most time. One should always stribe to
         // optimise the tests in order to make them execute faster; no one likes
