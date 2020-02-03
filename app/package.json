@@ -25,7 +25,7 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-less": "^1.4.1",
     "grunt-contrib-watch": "^1.0.0",
-    "jquery": "^3.2.1",
+    "jquery": "^3.4.0",
     "nsp": "^2.7.0",
     "semantic-ui-less": "^2.2.12",
     "supertest": "^3.0.0",
